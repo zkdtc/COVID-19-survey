@@ -4,65 +4,57 @@ CREATE DATABASE surveyDB;
 
 USE surveyDB;
 
-DROP TABLE survey;
-
-
 CREATE TABLE survey (
-	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	id INT NOT NULL AUTO_INCREMENT,
 	name	VARCHAR(50)	NULL,
-	description	VARCHAR(1000)	NULL,
-    updated	timestamp
-);
+	description	VARCHAR(1000) NULL,
+	PRIMARY KEY (id)
+    );
 
 CREATE TABLE question (
-	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	text	VARCHAR(255)	NULL,
-    updated	timestamp
-);
-
-CREATE TABLE question_order (
-	question_sequence INTEGER,
-    survey_id	INTEGER,
-		CONSTRAINT fk_survey FOREIGN KEY (survey_id)
-		REFERENCES survey (id)
-		ON DELETE CASCADE,
-    question_id	INTEGER,
-		CONSTRAINT fk_question FOREIGN KEY (question_id)
-		REFERENCES question (id)
-		ON DELETE CASCADE
-);
-
--- DROP TABLE survey_response;
-
-CREATE TABLE survey_response (
 	id INT NOT NULL AUTO_INCREMENT,
--- 	survey_id	INTEGER,
--- 		CONSTRAINT fk_survey FOREIGN KEY (survey_id)
--- 		REFERENCES survey (id)
--- 		ON DELETE CASCADE,
--- 	respondent_id	INTEGER,
--- 		CONSTRAINT fk_respondent FOREIGN KEY (respondent_id)
--- 		REFERENCES respondent (id)
--- 		ON DELETE CASCADE,
-	PRIMARY KEY (id),
-    FOREIGN KEY (survey_id) REFERENCES survey (id),
-	FOREIGN KEY (respondent_id) REFERENCES respondent (id),
-	upddated	timestamp
+    survey_id	INTEGER,
+	text	VARCHAR(1000)	NULL,
+	FOREIGN KEY (survey_id) REFERENCES survey (id),
+	PRIMARY KEY (id)
     );
---     
---     CREATE TABLE Orders (
---     OrderID int NOT NULL,
---     OrderNumber int NOT NULL,
---     PersonID int,
---     PRIMARY KEY (OrderID),
---     FOREIGN KEY (PersonID) REFERENCES Persons(PersonID)
--- );
 
 CREATE TABLE respondent (
-	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	id INT NOT NULL AUTO_INCREMENT,
 	name	varchar(50),
-	hashedpassword	varchar(100),
     email	varchar(255),
-    created	timestamp
+	PRIMARY KEY (id)
     );
+    
+-- CREATE TABLE question_order (
+-- 	id INT NOT NULL AUTO_INCREMENT,
+-- 	question_sequence INTEGER,
+--     survey_id	INTEGER,
+--     question_id	INTEGER,
+-- 	FOREIGN KEY (survey_id) REFERENCES survey (id),
+-- 	FOREIGN KEY (question_id) REFERENCES question (id),
+-- );
+-- DROP TABLE question_choices;
+
+CREATE TABLE question_choices (
+	id INT NOT NULL AUTO_INCREMENT,
+    question_id INTEGER,
+    text varchar(510),
+	PRIMARY KEY (id),
+	FOREIGN KEY (question_id) REFERENCES question (id)
+    );
+    
+-- DROP TABLE question_answers;
+
+    
+CREATE TABLE question_answers (
+	id INT NOT NULL AUTO_INCREMENT,
+    choice_selected INTEGER,
+    respondent_id INTEGER,
+	PRIMARY KEY (id),
+    FOREIGN KEY (respondent_id) REFERENCES respondent (id),
+	FOREIGN KEY (choice_selected) REFERENCES question_choices (id)
+    );
+
+
 
