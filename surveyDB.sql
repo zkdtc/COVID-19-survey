@@ -4,13 +4,14 @@ CREATE DATABASE surveyDB;
 
 USE surveyDB;
 
+-- DONE
 CREATE TABLE survey (
 	id INT NOT NULL AUTO_INCREMENT,
-	name	VARCHAR(50)	NULL,
+	name VARCHAR(50) NOT NULL,
 	description	VARCHAR(1000) NULL,
 	PRIMARY KEY (id)
     );
-
+-- DONE
 CREATE TABLE question (
 	id INT NOT NULL AUTO_INCREMENT,
     survey_id	INTEGER,
@@ -26,16 +27,6 @@ CREATE TABLE respondent (
 	PRIMARY KEY (id)
     );
     
--- CREATE TABLE question_order (
--- 	id INT NOT NULL AUTO_INCREMENT,
--- 	question_sequence INTEGER,
---     survey_id	INTEGER,
---     question_id	INTEGER,
--- 	FOREIGN KEY (survey_id) REFERENCES survey (id),
--- 	FOREIGN KEY (question_id) REFERENCES question (id),
--- );
--- DROP TABLE question_choices;
-
 CREATE TABLE question_choices (
 	id INT NOT NULL AUTO_INCREMENT,
     question_id INTEGER,
@@ -43,9 +34,6 @@ CREATE TABLE question_choices (
 	PRIMARY KEY (id),
 	FOREIGN KEY (question_id) REFERENCES question (id)
     );
-    
--- DROP TABLE question_answers;
-
     
 CREATE TABLE question_answers (
 	id INT NOT NULL AUTO_INCREMENT,
