@@ -1,0 +1,15 @@
+<h1>COVID-19 Survey</h1>
+
+<h2>Please answer the following questions</h2>
+
+<ul>
+  {{#each questions}}
+      {{> questions/question-block choices}}
+  {{/each}}
+</ul>
+
+
+<form class="create-form">
+
+  <button type="submit">Submit Your Response</button>
+</form>
