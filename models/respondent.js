@@ -9,9 +9,14 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(255),
       allowNull: false,
       isEmail: true
+    },
+    age: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      min: 1,
+      max: 99
     }
   });
-
   Respondent.associate = function(models) {
     Respondent.belongsToMany(models.Answer, {
       through: "AnswerRespondents"

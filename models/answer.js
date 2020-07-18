@@ -9,11 +9,14 @@ module.exports = function(sequelize, DataTypes) {
   //   --------
   Answer.associate = function(models) {
     Answer.belongsToMany(models.Respondent, {
+      // creating relationship tables 'on the fly' when you use through
       through: "AnswerRespondents"
     });
     Answer.belongsToMany(models.Choice, {
+      // creating relationship tables 'on the fly' when you use through
+
       through: "AnswerChoices"
     });
-    return Answer;
   };
+  return Answer;
 };
