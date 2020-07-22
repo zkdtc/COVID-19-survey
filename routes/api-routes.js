@@ -30,18 +30,7 @@ module.exports = function(app) {
     // db.Question.
     questions={};
     // Then render the handlebar using the questions
-    db.Respondent.create({
-      email: req.body.email,
-      name: req.body.name,
-      age: req.body.age
-    })
-      .then(() => {
-        console.log("Good");
-        res.redirect(307, "/api/questions");
-      })
-      .catch(err => {
-        res.status(401).json(err);
-      });
+
   });
   // Route for signing up a user. The user's password is automatically hashed and stored securely thanks to
   // how we configured our Sequelize User Model. If the user is created successfully, proceed to log the user in,
@@ -80,41 +69,30 @@ module.exports = function(app) {
     }
   });
 
-  // GET route for getting all of the questions
-  app.get("/api/questions", function(req, res) {
-    // findAll returns all entries for a table when used with no options
-    db.question.findAll({}).then(function(dbquestion) {
-      // We have access to the questions as an argument inside of the callback function
-      res.json(dbquestion);
-    });
-    res.render("index", { questions: dbquestion });
-  });
-
-  app.get("/api/choices", function(req, res) {
-    // findAll returns all entries for a table when used with no options
-    db.choices.findAll({}).then(function(dbchoices) {
-      // We have access to the choices as an argument inside of the callback function
-      res.json(dbchoices);
-    });
-    res.render("index", { choices: dbchoices });
-  });
-
+   const questions =[];
+   
    // GET route for getting all of the choices
    app.get("/api/questions", function(req, res) {
     // findAll returns all entries for a table when used with no options
-    db.question.findAll({}).then(function(dbquestion) {
+    db.questions.findAll((qRes)=>{
+      qRes.forEach(element => {
+        db.choices.findAll({
+          where: {
+            QuestionId: req.params.id
+          }
+        })
+            });
+    }).then(function(dbquestion) {
+      db.choices.findAll({}).then(function(dbchoices) {
+        // We have access to the choices as an argument inside of the callback function
+        res.json(dbchoices);
+      });
+      
       // We have access to the questions as an argument inside of the callback function
       res.json(dbquestion);
     });
-    res.render("index", { questions: dbquestion });
+    res.render("index", questions);
   });
 
-  app.get("/api/choices", function(req, res) {
-    // findAll returns all entries for a table when used with no options
-    db.choices.findAll({}).then(function(dbchoices) {
-      // We have access to the choices as an argument inside of the callback function
-      res.json(dbchoices);
-    });
-    res.render("index", { choices: dbchoices });
-  });
+ 
 };
