@@ -98,4 +98,23 @@ module.exports = function(app) {
     });
     res.render("index", { choices: dbchoices });
   });
+
+   // GET route for getting all of the choices
+   app.get("/api/questions", function(req, res) {
+    // findAll returns all entries for a table when used with no options
+    db.question.findAll({}).then(function(dbquestion) {
+      // We have access to the questions as an argument inside of the callback function
+      res.json(dbquestion);
+    });
+    res.render("index", { questions: dbquestion });
+  });
+
+  app.get("/api/choices", function(req, res) {
+    // findAll returns all entries for a table when used with no options
+    db.choices.findAll({}).then(function(dbchoices) {
+      // We have access to the choices as an argument inside of the callback function
+      res.json(dbchoices);
+    });
+    res.render("index", { choices: dbchoices });
+  });
 };
