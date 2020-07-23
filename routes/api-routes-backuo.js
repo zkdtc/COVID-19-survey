@@ -28,8 +28,20 @@ module.exports = function(app) {
 
     // Retrieve a list of questions from the QuestionDB here
     // db.Question.
-    questions = {};
+    questions={};
     // Then render the handlebar using the questions
+    db.Respondent.create({
+      email: req.body.email,
+      name: req.body.name,
+      age: req.body.age
+    })
+      .then(() => {
+        console.log("Good");
+        res.redirect(307, "/api/questions");
+      })
+      .catch(err => {
+        res.status(401).json(err);
+      });
   });
   // Route for signing up a user. The user's password is automatically hashed and stored securely thanks to
   // how we configured our Sequelize User Model. If the user is created successfully, proceed to log the user in,
@@ -68,42 +80,30 @@ module.exports = function(app) {
     }
   });
 
-  app.get("/api/questions", (req, res) => {
-    db.Question.findAll({
-      include: [
-        {
-          model: db.Choice, // This will use the foreign key automatically to "join" the results
-          as: "choices"
-        }
-      ]
-    })
-      .then(questions => {
-        console.log("quessss==>>>", questions);
-        res.send(questions);
-        //res.render("index", questions);
-      })
-      .catch(err => {
-        console.log("errrrrrr==>>>", err);
-      });
+  // GET route for getting all of the questions
+  app.get("/api/questions", function(req, res) {
+    // findAll returns all entries for a table when used with no options
+    db.question.findAll({}).then(function(dbquestion) {
+      // We have access to the questions as an argument inside of the callback function
+      res.json(dbquestion);
+    });
+    res.render("index", { questions: dbquestion });
   });
 
-  /*app.get("/api/testt", async (req, res) => {
-    try {
-      const survey = await db.Survey.create({
-        name: "survey1",
-        description: "sdfsdf"
-      });
-      //console.log('survey===>>', survey.id)
-      await db.Question.create({ text: "question1", surveyId: survey.id });
-      await db.Question.create({ text: "question2", surveyId: survey.id });
+  app.get("/api/choices", function(req, res) {
+    // findAll returns all entries for a table when used with no options
+    db.choices.findAll({}).then(function(dbchoices) {
+      // We have access to the choices as an argument inside of the callback function
+      res.json(dbchoices);
+    });
+    res.render("index", { choices: dbchoices });
+  });
 
-      await db.Choice.create({ text: "choice1 for q1", questionId: 1 });
-      await db.Choice.create({ text: "choice2 for q1", questionId: 1 });
-
-      await db.Choice.create({ text: "choice3 for q2", questionId: 2 });
-      await db.Choice.create({ text: "choice4 for q2", questionId: 2 });
-    } catch (err) {
-      console.log("errrr=>>>", err);
-    }
-  });*/
 };
+
+let attributes = ['id', 'name', 'bar.version', ['bar.last_modified', 'changed']];
+db.choice.findAll({
+  where      : where,
+  attributes : attributes,
+  include    : [bar]
+}).success(function (result) { ...

@@ -9,13 +9,14 @@ module.exports = function(sequelize, DataTypes) {
 
   Choice.associate = function(models) {
     Choice.belongsTo(models.Question, {
+      as: "question",
       foreignKey: {
         allowNull: false
       }
     });
-    Choice.belongsToMany(models.Answer, {
+    /*Choice.belongsToMany(models.Answer, {
       through: "AnswerChoices"
-    });
+    });*/
   };
   return Choice;
 };

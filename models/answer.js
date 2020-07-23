@@ -12,11 +12,17 @@ module.exports = function(sequelize, DataTypes) {
       // creating relationship tables 'on the fly' when you use through
       through: "AnswerRespondents"
     });
-    Answer.belongsToMany(models.Choice, {
+    Answer.belongsTo(models.Question, {
+      as: "question",
+      foreignKey: {
+        allowNull: false
+      }
+    });
+    /*Answer.belongsToMany(models.Choice, {
       // creating relationship tables 'on the fly' when you use through
 
       through: "AnswerChoices"
-    });
+    });*/
   };
   return Answer;
 };
