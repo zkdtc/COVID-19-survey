@@ -87,23 +87,33 @@ module.exports = function(app) {
       });
   });
 
-  /*app.get("/api/testt", async (req, res) => {
-    try {
-      const survey = await db.Survey.create({
-        name: "survey1",
-        description: "sdfsdf"
+  // respondent id
+  // answers
+
+
+  // Team - this is the section we need to discuss.  we have separate pages for posting; start and questions.  
+  app.post("/api/answers", (req, res) => {
+    console.log("/api/answers");
+    console.log(req.body);
+
+    // Save the data to the database here
+    db.Respondent.create({
+      email: req.body.email,
+      name: req.body.name,
+      age: req.body.age
+    })
+      .then(respondent => {
+        // the first time the respondent asnwers, the below will create the joined table
+        respondent.addAnswer(1); //associate the respondent with answer(id=1)
+        /*answer.addRespondent(1);
+        db.Respondent.addAnswer(respondentId, answerId);
+        db.Answer.addRespondent(answerId, respondentId);*/
+        console.log("Good");
+        // we need to change the line below to a "Thank You" page, or a page that shows the results after answering the survey
+        res.redirect(307, "/api/questions");
+      })
+      .catch(err => {
+        res.status(401).json(err);
       });
-      //console.log('survey===>>', survey.id)
-      await db.Question.create({ text: "question1", surveyId: survey.id });
-      await db.Question.create({ text: "question2", surveyId: survey.id });
-
-      await db.Choice.create({ text: "choice1 for q1", questionId: 1 });
-      await db.Choice.create({ text: "choice2 for q1", questionId: 1 });
-
-      await db.Choice.create({ text: "choice3 for q2", questionId: 2 });
-      await db.Choice.create({ text: "choice4 for q2", questionId: 2 });
-    } catch (err) {
-      console.log("errrr=>>>", err);
-    }
-  });*/
+  });
 };

@@ -10,7 +10,9 @@ module.exports = function(sequelize, DataTypes) {
   Answer.associate = function(models) {
     Answer.belongsToMany(models.Respondent, {
       // creating relationship tables 'on the fly' when you use through
-      through: "AnswerRespondents"
+      through: "AnswerRespondents",
+      as: "respondents",
+      foreignKey: "answerId"
     });
     Answer.belongsTo(models.Question, {
       as: "question",
