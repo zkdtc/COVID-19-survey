@@ -1,8 +1,8 @@
 {
   "development": {
     "username": "root",
-    "password": "Brhin1234",
-    "database": "surveyDB",
+    "password": "root",
+    "database": "surveyDbNew",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },

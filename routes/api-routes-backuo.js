@@ -28,8 +28,20 @@ module.exports = function(app) {
 
     // Retrieve a list of questions from the QuestionDB here
     // db.Question.
-    questions = {};
+    questions={};
     // Then render the handlebar using the questions
+    db.Respondent.create({
+      email: req.body.email,
+      name: req.body.name,
+      age: req.body.age
+    })
+      .then(() => {
+        console.log("Good");
+        res.redirect(307, "/api/questions");
+      })
+      .catch(err => {
+        res.status(401).json(err);
+      });
   });
   // Route for signing up a user. The user's password is automatically hashed and stored securely thanks to
   // how we configured our Sequelize User Model. If the user is created successfully, proceed to log the user in,
@@ -68,52 +80,30 @@ module.exports = function(app) {
     }
   });
 
-  app.get("/api/questions", (req, res) => {
-    db.Question.findAll({
-      include: [
-        {
-          model: db.Choice, // This will use the foreign key automatically to "join" the results
-          as: "choices"
-        }
-      ]
-    })
-      .then(questions => {
-        console.log("quessss==>>>", questions);
-        res.send(questions);
-        //res.render("index", questions);
-      })
-      .catch(err => {
-        console.log("errrrrrr==>>>", err);
-      });
+  // GET route for getting all of the questions
+  app.get("/api/questions", function(req, res) {
+    // findAll returns all entries for a table when used with no options
+    db.question.findAll({}).then(function(dbquestion) {
+      // We have access to the questions as an argument inside of the callback function
+      res.json(dbquestion);
+    });
+    res.render("index", { questions: dbquestion });
   });
 
-  // respondent id
-  // answers
-
-
-  // Team - this is the section we need to discuss.  we have separate pages for posting; start and questions.  
-  app.post("/api/answers", (req, res) => {
-    console.log("/api/answers");
-    console.log(req.body);
-
-    // Save the data to the database here
-    db.Respondent.create({
-      email: req.body.email,
-      name: req.body.name,
-      age: req.body.age
-    })
-      .then(respondent => {
-        // the first time the respondent asnwers, the below will create the joined table
-        respondent.addAnswer(1); //associate the respondent with answer(id=1)
-        /*answer.addRespondent(1);
-        db.Respondent.addAnswer(respondentId, answerId);
-        db.Answer.addRespondent(answerId, respondentId);*/
-        console.log("Good");
-        // we need to change the line below to a "Thank You" page, or a page that shows the results after answering the survey
-        res.redirect(307, "/api/questions");
-      })
-      .catch(err => {
-        res.status(401).json(err);
-      });
+  app.get("/api/choices", function(req, res) {
+    // findAll returns all entries for a table when used with no options
+    db.choices.findAll({}).then(function(dbchoices) {
+      // We have access to the choices as an argument inside of the callback function
+      res.json(dbchoices);
+    });
+    res.render("index", { choices: dbchoices });
   });
+
 };
+
+let attributes = ['id', 'name', 'bar.version', ['bar.last_modified', 'changed']];
+db.choice.findAll({
+  where      : where,
+  attributes : attributes,
+  include    : [bar]
+}).success(function (result) { ...
