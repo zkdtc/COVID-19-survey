@@ -3,8 +3,14 @@
 <h2>Please answer the following questions</h2>
 
 <ul>
-  {{#each questions}}
-      {{> questions/question-block choices}}
+  {{#each this}}
+    {{{text}}}
+    {{#each Choices}}
+	<div class="form-check form-check-inline">
+  <input type="radio" class="form-check-input" name={{this.QuestionId}}>
+  <label class="form-check-label">{{this.text}}</label>
+</div>
+  {{/each}}
   {{/each}}
 </ul>
 

@@ -9,7 +9,6 @@ module.exports = function(sequelize, DataTypes) {
 
   Choice.associate = function(models) {
     Choice.belongsTo(models.Question, {
-      as: "question",
       foreignKey: {
         allowNull: false
       }
