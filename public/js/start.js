@@ -28,13 +28,18 @@ $(document).ready(() => {
   // loginUser does a post to our "api/login" route and if successful, redirects us the the members page
   function startSurvey(name, email, age) {
     console.log("startSurvey");
+    console.log("startdata====>", name + " " + email, +" " + age);
+    localStorage.setItem("name", name);
+    localStorage.setItem("email", email);
+    localStorage.setItem("age", age);
+    // $.post("/api/start", {
     $.post("/api/start", {
       name: name,
       email: email,
       age: age
     })
       .then(() => {
-        window.location.replace("/finish");
+        window.location.replace("/api/questions");
         // If there's an error, log the error
       })
       .catch(err => {

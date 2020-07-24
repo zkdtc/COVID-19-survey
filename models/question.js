@@ -15,14 +15,17 @@ module.exports = function(sequelize, DataTypes) {
     });
 
     Question.hasMany(models.Choice, {
+      as: "Choices",
       foreignKey: {
-        allowNull: false
+        allowNull: false,
+        onDelete: "cascade"
       }
     });
 
     Question.hasMany(models.Answer, {
       foreignKey: {
-        allowNull: false
+        allowNull: false,
+        onDelete: "cascade"
       }
     });
   };

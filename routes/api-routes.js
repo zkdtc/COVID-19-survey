@@ -64,64 +64,82 @@ module.exports = function(app) {
 
   app.get("/api/questions", (req, res) => {
     db.Question.findAll({
-      // include: [
-      //   {
-      //     model: db.Choice // This will use the foreign key automatically to "join" the results
-      //   }
-      // ],
-      raw: true
+      include: [
+        {
+          model: db.Choice,
+          as: "Choices"
+        }
+      ]
     })
-      .then(questions => {
-        questions.forEach(async question => {
-          Choices = await db.Choice.findAll({
-            where: {
-              QuestionId: question.id
-            },
-            raw: true
-          });
-          console.log(Choices);
-          const temp = [];
-          for (i = 0; i < Choices.length; i++) {
-            temp.push(Choices.text);
-          }
-          console.log(temp);
-          question.Choices = Choices;
-        });
-        console.log("quessss==>>>", questions);
-        res.render("index", questions);
+      .then(async questions => {
+        const mappedQuestions = questions.map(q => q.toJSON());
+        res.render("index", mappedQuestions);
       })
       .catch(err => {
         console.log("errrrrrr==>>>", err);
       });
-    //questions = [{ text: "Abc", Choices: ["A", "B", "C"] }];
   });
 
-  // respondent id
-  // answers
-
   // Team - this is the section we need to discuss.  we have separate pages for posting; start and questions.
-  app.post("/api/answers", (req, res) => {
-    console.log("/api/answers");
-    console.log(req.body);
+  app.post("/api/answers", async (req, res) => {
+    try {
+      console.log("/api/answers");
+      console.log("req bodyy==>>>", req.body);
+      const { email, answers } = req.body;
+      const respondent = await db.Respondent.findOne({
+        where: {
+          email
+        }
+      });
+      const createdAnswers = await Promise.all(
+        answers.map(item => {
+          return db.Answer.create({
+            QuestionId: item.questionId,
+            ChoiceId: item.choiceId,
+            RespondentId: respondent.id,
+            text: item.text
+          });
+        })
+      );
+      res.status(201).send(createdAnswers);
+    } catch (err) {
+      console.log("errr occurred==>>>>", err);
+    }
+    // res.json(req.body)
+    /*db.Respondent.findOne({
+      where: {
+        email: localStorage.getItem("email")
+      }
+    }).then(function(results) {
+      console.log("Respondent Results===>")
+      res.json(results);
+    });
 
     // Save the data to the database here
-    db.Respondent.create({
-      email: req.body.email,
-      name: req.body.name,
-      age: req.body.age
+    db.Answer.create({
+      // each of the radio buttons has a 'name' attribute
+      // for eaxmple:
+      // <input type="radio" class="form-check-input" name="2">
+      // in the above case, the answer is for question 2
+      // ...
+      // also, i want to put the radio buttton text value in the db.Answer.text column
+      QuestionId: req.body.?,
+      ChoiceId: req.body.?,
+      RespondentId: req.body.?
+      text: req.body.?
     })
       .then(respondent => {
         // the first time the respondent asnwers, the below will create the joined table
         respondent.addAnswer(1); //associate the respondent with answer(id=1)
-        /*answer.addRespondent(1);
+        answer.addRespondent(1);
         db.Respondent.addAnswer(respondentId, answerId);
-        db.Answer.addRespondent(answerId, respondentId);*/
+        db.Answer.addRespondent(answerId, respondentId);
         console.log("Good");
         // we need to change the line below to a "Thank You" page, or a page that shows the results after answering the survey
         res.redirect(307, "/api/questions");
       })
       .catch(err => {
         res.status(401).json(err);
-      });
+      });*/
   });
 };

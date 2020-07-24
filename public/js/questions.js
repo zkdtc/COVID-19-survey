@@ -1,34 +1,37 @@
 $(document).ready(() => {
-  // This file just does a GET request to figure out which user is logged in
-  // and updates the HTML on the page
-  $.get("/api/user_data").then((data) => {
-    $(".member-name").text(data.email);
-  });
   const radio = $("input:radio");
   const answers = [];
 
-  $("#submitBtn").on("submit", (event) => {
+  $("#submitAnswersForm").on("submit", event => {
     event.preventDefault();
 
-    radio.forEach((element) => {
-      if (element.is(":checked")) {
-        answers.push(element.text());
+    radio.each((index, element) => {
+      console.log("answers===>", element);
+      if ($(element).is(":checked")) {
+        answers.push({
+          choiceId: element.id,
+          questionId: element.name,
+          text: $(element).data("text")
+        });
       }
     });
-
+    console.log("answers===>", answers);
     sendAnswer(answers);
   });
 
-  function sendAnswer(name) {
-    $.post("/api/question", {
-      answers: name,
+  function sendAnswer(answers) {
+    $.post("/api/answers", {
+      // am i sending all answers in an array or each response?
+      answers,
+      email: localStorage.getItem("email")
     })
-      .then(() => {
-        window.location.replace("/finish");
+      .done(resp => {
+        console.log("resp==>>>>", resp);
+        //window.location.replace("/finish");
         // If there's an error, log the error
       })
-      .catch((err) => {
-        console.log(err);
+      .fail(err => {
+        console.log("an error occurred", err);
       });
   }
 });

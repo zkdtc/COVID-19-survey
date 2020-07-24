@@ -2,20 +2,25 @@
 
 <h2>Please answer the following questions</h2>
 
-<ul>
-  {{#each this}}
+
+
+
+
+
+<form class="create-form" id="submitAnswersForm">
+
+  <ul>
+    {{#each this}}
+    <hr>
     {{{text}}}
     {{#each Choices}}
-	<div class="form-check form-check-inline">
-  <input type="radio" class="form-check-input" name={{this.QuestionId}}>
-  <label class="form-check-label">{{this.text}}</label>
-</div>
-  {{/each}}
-  {{/each}}
-</ul>
-
-
-<form class="create-form">
+    <div class="form-check form-check-inline">
+      <input type="radio" class="form-check-input" data-text="{{this.text}}" id={{this.id}} name={{this.QuestionId}}>
+      <label class="form-check-label">{{this.text}}</label>
+    </div>
+    {{/each}}
+    {{/each}}
+  </ul>
 
   <button type="submit">Submit Your Response</button>
 </form>

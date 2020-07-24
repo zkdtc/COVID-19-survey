@@ -1,0 +1,15 @@
+<li>
+	{{questions.question}}
+
+<ul>
+  {{#each questions.choices}}
+	<div class="form-check form-check-inline">
+  <input type="radio" class="form-check-input" name="choices">
+  <label class="form-check-label">{{this}}</label>
+</div>
+  {{/each}}
+</ul>
+
+
+
+</li>
