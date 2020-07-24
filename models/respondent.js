@@ -20,7 +20,6 @@ module.exports = function(sequelize, DataTypes) {
   Respondent.associate = function(models) {
     Respondent.belongsToMany(models.Answer, {
       through: "AnswerRespondents",
-      as: "answers",
       foreignKey: "respondentId"
     });
   };

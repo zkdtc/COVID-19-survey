@@ -2,6 +2,9 @@
 const db = require("../models");
 
 module.exports = function(app) {
+  const exphbs = require("express-handlebars");
+  app.engine("handlebars", exphbs({ defaultLayout: "main" }));
+  app.set("view engine", "handlebars");
   console.log("api");
   app.post("/api/start", (req, res) => {
     console.log("/api/start");
@@ -22,15 +25,6 @@ module.exports = function(app) {
       });
   });
 
-  app.post("/api/questions", (req, res) => {
-    console.log("/api/questions");
-    console.log(req.body);
-
-    // Retrieve a list of questions from the QuestionDB here
-    // db.Question.
-    questions = {};
-    // Then render the handlebar using the questions
-  });
   // Route for signing up a user. The user's password is automatically hashed and stored securely thanks to
   // how we configured our Sequelize User Model. If the user is created successfully, proceed to log the user in,
   // otherwise send back an error
@@ -70,28 +64,42 @@ module.exports = function(app) {
 
   app.get("/api/questions", (req, res) => {
     db.Question.findAll({
-      include: [
-        {
-          model: db.Choice, // This will use the foreign key automatically to "join" the results
-          as: "choices"
-        }
-      ]
+      // include: [
+      //   {
+      //     model: db.Choice // This will use the foreign key automatically to "join" the results
+      //   }
+      // ],
+      raw: true
     })
       .then(questions => {
+        questions.forEach(async question => {
+          Choices = await db.Choice.findAll({
+            where: {
+              QuestionId: question.id
+            },
+            raw: true
+          });
+          console.log(Choices);
+          const temp = [];
+          for (i = 0; i < Choices.length; i++) {
+            temp.push(Choices.text);
+          }
+          console.log(temp);
+          question.Choices = Choices;
+        });
         console.log("quessss==>>>", questions);
-        res.send(questions);
-        //res.render("index", questions);
+        res.render("index", questions);
       })
       .catch(err => {
         console.log("errrrrrr==>>>", err);
       });
+    //questions = [{ text: "Abc", Choices: ["A", "B", "C"] }];
   });
 
   // respondent id
   // answers
 
-
-  // Team - this is the section we need to discuss.  we have separate pages for posting; start and questions.  
+  // Team - this is the section we need to discuss.  we have separate pages for posting; start and questions.
   app.post("/api/answers", (req, res) => {
     console.log("/api/answers");
     console.log(req.body);
