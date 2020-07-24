@@ -10,9 +10,18 @@ module.exports = function(sequelize, DataTypes) {
   Choice.associate = function(models) {
     Choice.belongsTo(models.Question, {
       foreignKey: {
-        allowNull: false
+        allowNull: false,
+        onDelete: "cascade"
       }
     });
+
+    Choice.hasMany(models.Answer, {
+      foreignKey: {
+        allowNull: false,
+        onDelete: "cascade"
+      }
+    });
+
     /*Choice.belongsToMany(models.Answer, {
       through: "AnswerChoices"
     });*/

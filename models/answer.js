@@ -18,6 +18,12 @@ module.exports = function(sequelize, DataTypes) {
         allowNull: false
       }
     });
+    //added after class thursday
+    Answer.belongsTo(models.Choice, {
+      foreignKey: {
+        allowNull: false
+      }
+    });
     /*Answer.belongsToMany(models.Choice, {
       // creating relationship tables 'on the fly' when you use through
 

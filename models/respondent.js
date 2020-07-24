@@ -18,9 +18,15 @@ module.exports = function(sequelize, DataTypes) {
     }
   });
   Respondent.associate = function(models) {
-    Respondent.belongsToMany(models.Answer, {
-      through: "AnswerRespondents",
-      foreignKey: "respondentId"
+    //   Respondent.belongsToMany(models.Answer, {
+    //     through: "AnswerRespondents",
+    //     foreignKey: "respondentId"
+    //   });
+    // };
+    Respondent.hasMany(models.Answer, {
+      foreignKey: {
+        allowNull: false
+      }
     });
   };
   return Respondent;
