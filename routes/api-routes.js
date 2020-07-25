@@ -62,6 +62,12 @@ module.exports = function(app) {
     }
   });
 
+  app.get("/api/chart", (req, res) => {
+    db.Answer.findAll({}).then(results => {
+      res.json(results);
+    });
+  });
+
   app.get("/api/questions", (req, res) => {
     db.Question.findAll({
       include: [
