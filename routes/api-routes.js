@@ -96,7 +96,8 @@ module.exports = function(app) {
       );
       console.log("createAnswers");
       console.log(createdAnswers);
-      res.status(201).send(createdAnswers);
+      //res.status(201).send(createdAnswers);
+      res.json(createdAnswers);
     } catch (err) {
       console.log("errr occurred==>>>>", err);
     }
