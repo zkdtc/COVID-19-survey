@@ -33,8 +33,9 @@ $(document).ready(() => {
       email: email,
       age: age
     })
-      .then(() => {
-        window.location.replace("/finish");
+      .then((req,res) => {
+        //res.redirect(307, "/api/questions");      // post method
+        window.location.replace("/api/questions");  // get method
         // If there's an error, log the error
       })
       .catch(err => {

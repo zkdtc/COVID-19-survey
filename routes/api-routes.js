@@ -79,15 +79,15 @@ module.exports = function(app) {
             },
             raw: true
           });
-          console.log(Choices);
+          //console.log(Choices);
           const temp = [];
           for (i = 0; i < Choices.length; i++) {
             temp.push(Choices.text);
           }
-          console.log(temp);
+          //console.log(temp);
           question.Choices = Choices;
         });
-        console.log("quessss==>>>", questions);
+        //console.log("quessss==>>>", questions);
         res.render("index", questions);
       })
       .catch(err => {
