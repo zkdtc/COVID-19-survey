@@ -18,7 +18,7 @@ module.exports = function(app) {
     })
       .then(() => {
         console.log("Good");
-        res.redirect(307, "/api/questions");
+        res.redirect("/api/questions");
       })
       .catch(err => {
         res.status(401).json(err);
@@ -45,21 +45,6 @@ module.exports = function(app) {
   app.get("/logout", (req, res) => {
     req.logout();
     res.redirect("/");
-  });
-
-  // Route for getting some data about our user to be used client side
-  app.get("/api/user_data", (req, res) => {
-    if (!req.user) {
-      // The user is not logged in, send back an empty object
-      res.json({});
-    } else {
-      // Otherwise send back the user's email and id
-      // Sending back a password, even a hashed password, isn't a good idea
-      res.json({
-        email: req.user.email,
-        id: req.user.id
-      });
-    }
   });
 
   app.get("/api/chart", (req, res) => {
@@ -97,6 +82,8 @@ module.exports = function(app) {
           email
         }
       });
+      console.log("respondent");
+      console.log(respondent);
       const createdAnswers = await Promise.all(
         answers.map(item => {
           return db.Answer.create({
@@ -107,6 +94,8 @@ module.exports = function(app) {
           });
         })
       );
+      console.log("createAnswers");
+      console.log(createdAnswers);
       res.status(201).send(createdAnswers);
     } catch (err) {
       console.log("errr occurred==>>>>", err);
