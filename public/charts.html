@@ -1,11 +1,6 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!-->
 <html class="no-js">
-<!--<![endif]-->
-
+​
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -17,85 +12,69 @@
         crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
         integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+​
 </head>
-
+​
 <body>
+​
     <div class="container">
-        <canvas id="myChart">
-
+        <canvas id="myChart1">
+​
         </canvas>
     </div>
+​
+    <div class="container">
+        <canvas id="myChart2">
+​
+        </canvas>
+    </div>
+​
+​
     <script>
-
-        let mysql = require('mysql');
-
-        let con = mysql.createConnection({
-            host: "localhost",
-            user: "root",
-            password: "root",
-            database: "ssurveyDbNew"
-        });
-
-        con.connect(function (err) {
-            
-            if (err) throw err;
-            con.query("SELECT * FROM Answers WHERE QuestionId = 10", function (err, q10, fields) {
-                if (err) throw err;
-                console.log(result);
-            });
-
-            console.log("q10===>", q10);
-
-            if (err) throw err;
-            con.query("SELECT * FROM Answers WHERE QuestionId = 11", function (err, q11, fields) {
-                if (err) throw err;
-                console.log(result);
-            });
-
-            console.log("q11===>", q11);
-
-
-        });
-
-        let myChart = document.getElementById('myChart').getContext('2d');
-
+        let questions = [];
+        let choices = [];
+        let answers = [];
+        
+        // Questions
+        // const questionURL = "http://localhost:8020/api/questionsChoices";
+        const answersURL = "http://localhost:8020/api/chartAnswer";
+        $.ajax({
+            url: answersURL,
+            method: "GET"
+        }).then(response => {
+            console.log("response===>", response);
+            answers = response.filter(res => res.QuestionId === 12).map(res => res.text)
+            console.log("answers", answers);
+            const month1 = response.filter(res => res.text === "< 1 Month").length;
+            const month2 = response.filter(res => res.text === "1 Month").length
+            const month3 = response.filter(res => res.text === "2 Months").length
+            const month4 = response.filter(res => res.text === "> 2 Months").length
+        // ***MY CHART 1***
+        let myChart1 = document.getElementById('myChart1').getContext('2d');
         // GlobalOptions
         Chart.defaults.global.defaultFontFamily = 'Roboto';
         Chart.defaults.global.defaultFontSize = 9;
         Chart.defaults.global.defaultFontColor = 'grey';
-
-
-        let covidChart = new Chart(myChart, {
+        let covidChart = new Chart(myChart1, {
             type: 'bar', // bar, horizontalBar, pie, line, doughnut, radar, polarArea 
             data: {
-                labels: ['<25', '25-44', '45-54', '55-64', '65-74', '>74'],
+                // labels: choices[0].map(choice=>choice.text),
+                labels: [
+                    '< 1 Month',
+                    '1 Month',
+                    '2 Months',
+                    '> 2 Months'
+                ],
                 datasets: [{
-                    label: 'Had Covid',
+                    label: 'Months',
                     data: [
-                        10,
-                        20,
-                        30,
-                        40,
-                        50,
-                        60
-                    ],
+                    month1,
+                    month2,
+                    month3,
+                    month4
+                    ], 
                     backgroundColor: 'green',
-                    borderWidth: 2,
-                    borderColor: 'grey',
-                    hoverBorderWidth: 3,
-                    hoverBorderColor: 'black'
-                },
-                {
-                    label: 'Lost Job',
-                    data: [
-                        65,
-                        55,
-                        45,
-                        35,
-                        25,
-                        15
-                    ],
-                    backgroundColor: 'blue',
                     borderWidth: 2,
                     borderColor: 'grey',
                     hoverBorderWidth: 3,
@@ -106,7 +85,7 @@
             options: {
                 title: {
                     display: true,
-                    text: 'Economic Impacts',
+                    text: 'How long were you at shelter-in-place?',
                     fontSize: 18
                 },
                 legend: {
@@ -115,13 +94,15 @@
                         fontColor: 'black'
                     }
                 }
-
             }
         });
-
+    });
+// ***MY CHART 1***
     </script>
-
-
+    <script src="js/Chart.js"></script>
+​
+​
+​
 </body>
-
+​
 </html>
