@@ -15,7 +15,7 @@ module.exports = function(app) {
     })
       .then(() => {
         console.log("Good");
-        res.redirect(307, "/api/questions");
+        res.redirect("/api/questions");
       })
       .catch(err => {
         res.status(401).json(err);
