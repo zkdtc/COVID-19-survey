@@ -3,6 +3,14 @@ $(document).ready(() => {
   //const myChart1 = $("#myChart1");
 
   const ctx = document.getElementById("myChart1").getContext("2d");
+  const nextForm = $("form.next");
+
+  // When the form is submitted, we validate there's an email and password entered
+  nextForm.on("submit", event => {
+    event.preventDefault();
+    window.location.replace("/charts");
+  });
+
   const chart = new Chart(ctx, {
     type: "bar",
     data: {
