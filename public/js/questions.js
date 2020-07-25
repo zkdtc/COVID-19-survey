@@ -27,6 +27,7 @@ $(document).ready(() => {
     })
       .done(resp => {
         console.log("resp==>>>>", resp);
+        window.location.replace("/finish"); // point to /api/questions
         //window.location.replace("/finish");
         // If there's an error, log the error
       })

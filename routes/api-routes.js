@@ -1,5 +1,6 @@
 // Requiring our models and passport as we've configured it
 const db = require("../models");
+const path = require("path");
 
 module.exports = function(app) {
   const exphbs = require("express-handlebars");
@@ -18,7 +19,7 @@ module.exports = function(app) {
     })
       .then(() => {
         console.log("Good");
-        res.redirect(307, "/api/questions");
+        res.redirect("/api/questions");
       })
       .catch(err => {
         res.status(401).json(err);
@@ -28,38 +29,24 @@ module.exports = function(app) {
   // Route for signing up a user. The user's password is automatically hashed and stored securely thanks to
   // how we configured our Sequelize User Model. If the user is created successfully, proceed to log the user in,
   // otherwise send back an error
-  app.post("/api/finish", (req, res) => {
-    db.User.create({
-      email: req.body.email,
-      password: req.body.password
-    })
-      .then(() => {
-        res.redirect(307, "/api/login");
-      })
-      .catch(err => {
-        res.status(401).json(err);
-      });
+  app.get("/finish", (req, res) => {
+    console.log(path.join(__dirname, "../public/finish.html"));
+    console.log("send");
+    res.sendFile(path.join(__dirname, "../public/finish.html"));
+    // db.Respondent.findAll({})
+    //   .then((allRespondent) => {
+
+    //     res.redirect(307, "/api/login");
+    //   })
+    //   .catch(err => {
+    //     res.status(401).json(err);
+    //   });
   });
 
   // Route for logging user out
   app.get("/logout", (req, res) => {
     req.logout();
     res.redirect("/");
-  });
-
-  // Route for getting some data about our user to be used client side
-  app.get("/api/user_data", (req, res) => {
-    if (!req.user) {
-      // The user is not logged in, send back an empty object
-      res.json({});
-    } else {
-      // Otherwise send back the user's email and id
-      // Sending back a password, even a hashed password, isn't a good idea
-      res.json({
-        email: req.user.email,
-        id: req.user.id
-      });
-    }
   });
 
   app.get("/api/chart", (req, res) => {
@@ -97,6 +84,8 @@ module.exports = function(app) {
           email
         }
       });
+      console.log("respondent");
+      console.log(respondent);
       const createdAnswers = await Promise.all(
         answers.map(item => {
           return db.Answer.create({
@@ -107,7 +96,11 @@ module.exports = function(app) {
           });
         })
       );
-      res.status(201).send(createdAnswers);
+      console.log("createAnswers");
+      console.log(createdAnswers);
+      //res.status(201).send(createdAnswers);
+      //res.json(createdAnswers);
+      res.redirect("/finish");
     } catch (err) {
       console.log("errr occurred==>>>>", err);
     }
