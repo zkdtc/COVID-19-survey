@@ -1,9 +1,9 @@
 {
   "development": {
-    "username": "root",
-    "password": "",
-    "database": "surveyDbNew",
-    "host": "127.0.0.1",
+    "username": "pesrzczymffapejd",
+    "password": "l0jqee4isv0db9d7",
+    "database": "o2k8o4w7l3yez142",
+    "host": "g3v9lgqa8h5nq05o.cbetxkdyhwsb.us-east-1.rds.amazonaws.com	",
     "dialect": "mysql"
   },
   "test": {
